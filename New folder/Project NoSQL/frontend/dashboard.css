@@ -1,0 +1,82 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #007bff;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.container {
+  background: white;
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 900px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+form input, form select, form button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+form button:hover {
+  background: #0056b3;
+}
+
+.timetable {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.day-column {
+  background: #e9ecef;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.day-column h3 {
+  text-align: center;
+  background: #007bff;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.class-card {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 5px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.class-card button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 3px 5px;
+  cursor: pointer;
+  border-radius: 3px;
+}

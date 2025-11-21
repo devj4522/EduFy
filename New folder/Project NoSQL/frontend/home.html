@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>EduFy</title>
+  <!-- External CSS file -->
+  <link rel="stylesheet" href="home.css">
+  <!-- External JS file -->
+  <script src="home.js" defer></script>
+</head>
+<body>
+  <!-- ================= HEADER ================= -->
+  <header class="header">
+    <!-- Logo -->
+    <h1><img src="../images/EduFy.png" alt="EduFy Logo"></h1>
+
+    <!-- Navigation Menu -->
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#about">About Project</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Login Button -->
+    <button class="btn login-btn" onclick="login()">Login</button>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Stay Updated. Stay Organized.</h2>
+      <p>
+        Real-time notifications and smart class management system for students, 
+        teachers, and admins. Never miss a class update again!
+      </p>
+      <!-- CTA Button -->
+      <button class="btn start-btn" onclick="register()">Get Started</button>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT PROJECT SECTION ================= -->
+  <section id="about" class="about">
+    <h2>About Project</h2>
+    <p>
+      The Class Alert System is designed to streamline communication 
+      between teachers and students. With features like real-time 
+      notifications, timetable management, attendance tracking, and 
+      analytics, it ensures that no important update is ever missed.
+      This project focuses on simplifying classroom management and 
+      boosting productivity through automation.
+    </p>
+  </section>
+
+  <!-- ================= FEATURES SECTION ================= -->
+  <section id="features" class="features">
+    <h2>Key Features</h2>
+    <div class="features-grid">
+      
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="icon">📅</div>
+        <h3>Timetable CRUD</h3>
+        <p>Create, update, and delete class schedules seamlessly.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="icon">🗓</div>
+        <h3>Class Scheduling</h3>
+        <p>Plan and update classes dynamically.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="icon">⏰</div>
+        <h3>Automatic Reminders</h3>
+        <p>Students are reminded 5 minutes before class.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="icon">🔔</div>
+        <h3>Manual Alerts</h3>
+        <p>Teachers can send instant notifications manually.</p>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="feature-card">
+        <div class="icon">⚡</div>
+        <h3>Real-Time Notifications</h3>
+        <p>Get updates instantly using the system.</p>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h3>Attendance</h3>
+        <p>Track and manage attendance digitally.</p>
+      </div>
+
+      <!-- Feature 7 -->
+      <div class="feature-card">
+        <div class="icon">🎯</div>
+        <h3>Targeted Alerts</h3>
+        <p>Notify specific groups or departments.</p>
+      </div>
+       <div class="feature-card">
+        <div class="icon">🤖</div>
+        <h3>Ai Service</h3>
+        <p>Use the Ai bot positively.</p>
+      </div>
+      <!-- Feature 9 -->
+      <div class="feature-card">
+        <div class="icon">👤</div>
+        <h3>Role-Based Login</h3>
+        <p>Separate dashboards for admins, teachers, and students.</p>
+      </div>
+
+      <!-- Feature 10 -->
+      <div class="feature-card">
+        <div class="icon">🏷</div>
+        <h3>Profile Management</h3>
+        <p>Manage personal details and settings easily.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS SECTION ================= -->
+  <section id="how" class="how">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <!-- Step 1 -->
+      <div class="step">
+        <span class="step-number">1</span>
+        <p>Admin sets up timetable and manages users.</p>
+      </div>
+      <!-- Step 2 -->
+      <div class="step">
+        <span class="step-number">2</span>
+        <p>Teachers create alerts or update schedules.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="step">
+        <span class="step-number">3</span>
+        <p>System automatically sends reminders.</p>
+      </div>
+      <!-- Step 4 -->
+      <div class="step">
+        <span class="step-number">4</span>
+        <p>Students receive real-time notifications.</p>
+      </div>
+      <!-- Step 5 -->
+      <div class="step">
+        <span class="step-number">5</span>
+        <p>Admin tracks all activity through analytics.</p>
+      </div>
+      <!-- Step 6 -->
+      <div class="step">
+        <span class="step-number">6</span>
+        <p>Attendance records are managed digitally for accuracy.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CALL TO ACTION (CTA) SECTION ================= -->
+<section id="contact" class="cta">
+  <h3>Join Us Today!</h3>
+  <p>Use Edufy to never miss a class.</p>
+  <!-- Social Media Icons -->
+  <div class="social-links">
+    <a href="https://wa.me/your-number" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://www.linkedin.com/in/your-profile" target="_blank" class="linkedin"><i class="fab fa-linkedin"></i></a>
+    <a href="https://www.instagram.com/your-profile" target="_blank" class="instagram"><i class="fab fa-instagram"></i></a>
+    <a href="mailto:yourmail@example.com" class="mail"><i class="fas fa-envelope"></i></a>
+  </div>
+</section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <p>© 2025 EduFy. All rights reserved.</p>
+  </footer>
+</body>
+</html>

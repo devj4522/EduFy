@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Students - EduFy</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #f5f9ff;
+      color: #333;
+    }
+
+    /* ====== HEADER ====== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #007bff;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .header h1 {
+      font-size: 20px;
+    }
+
+    .logout {
+      background: #fff;
+      color: #007bff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* ====== SIDEBAR ====== */
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 200px;
+      height: 100%;
+      background: #e6f0ff;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+      padding: 10px 20px;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: #007bff;
+      color: #fff;
+      border-radius: 5px;
+    }
+
+    /* ====== MAIN CONTENT ====== */
+    .content {
+      margin-left: 200px;
+      padding: 80px 30px 30px;
+      flex: 1;
+    }
+
+    .content h2 {
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #007bff;
+      color: white;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background-color: #f1f7ff;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+    }
+
+    .back-btn {
+      background: #007bff;
+      color: #fff;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .back-btn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1><img src="../images/EduFy.png" alt="EduFy Logo" style="  position: absolute;              
+  height: 200px;                   
+  top: 50%;                        
+  transform: translateY(-50%); "></h1>
+    <button class="logout" onclick="window.location.href='login.html'">Logout</button>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="teacher_dashboard.html">🏠 Home</a>
+    <a href="announcement.html">📢 Announcements</a>
+    <a href="#">📚 Upload Notes</a>
+    <a href="view_students.html">👥 View Students</a>
+    <a href="#">⚙️ Settings</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <button class="back-btn" onclick="window.location.href='teacher_dashboard.html'">← Back</button>
+    <h2>👩‍🎓 Student List</h2>
+
+    <table id="students-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Section</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="3" class="no-data">Loading students...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    async function loadStudents() {
+      try {
+        const res = await fetch('http://localhost:5000/api/students');
+        const data = await res.json();
+        const tbody = document.querySelector('#students-table tbody');
+        tbody.innerHTML = '';
+
+        if (!data.length) {
+          tbody.innerHTML = '<tr><td colspan="3" class="no-data">No students found</td></tr>';
+          return;
+        }
+
+        data.forEach(stu => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${stu.fullName || 'N/A'}</td>
+            <td>${stu.email}</td>
+            <td>${stu.section || '-'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        console.error('Error loading students:', err);
+        document.querySelector('#students-table tbody').innerHTML =
+          '<tr><td colspan="3" class="no-data" style="color:red;">Failed to load students</td></tr>';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadStudents);
+  </script>
+</body>
+</html>

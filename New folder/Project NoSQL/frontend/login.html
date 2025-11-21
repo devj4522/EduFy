@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduFy - Login</title>
+
+  <link rel="stylesheet" href="login.css" />
+  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+</head>
+
+<body>
+
+  <!-- HOME BUTTON -->
+  <a href="home.html" class="home-btn">
+    <box-icon name="home" type="solid" color="white"></box-icon>
+  </a>
+
+  <!-- Background Student Icons -->
+  <img src="https://img.icons8.com/external-flatart-icons-outline-flatarticons/512/external-school-bag-back-to-school-flatart-icons-outline-flatarticons.png" 
+       class="bg-item bag" alt="bag">
+  <img src="https://img.icons8.com/ios-filled/500/pencil.png" class="bg-item pen" alt="pen">
+  <img src="https://img.icons8.com/ios-filled/500/book.png" class="bg-item book" alt="book">
+
+  <!-- Main Login Box -->
+  <div class="login-box">
+
+    <h2 class="title">Welcome Back</h2>
+    <p class="quote">“Stay ahead. Every class matters.”</p>
+
+    <form id="login-form">
+
+      <!-- Email Field -->
+      <div class="input-box">
+        <label for="email">Email</label>
+        <div class="input-field">
+          <box-icon name="user" type="solid" color="#6b7280"></box-icon>
+          <input type="email" id="email" required placeholder="Enter your email" />
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="input-box">
+        <label for="password">Password</label>
+        <div class="input-field">
+          <box-icon name="lock-alt" type="solid" color="#6b7280"></box-icon>
+          <input type="password" id="password" required placeholder="Enter your password" />
+          <box-icon id="togglePass" name='show' color="#6b7280" style="cursor:pointer"></box-icon>
+        </div>
+      </div>
+
+      <button class="btn" type="submit">Login</button>
+
+      <p id="error-message" class="error-msg"></p>
+
+    </form>
+
+  </div>
+
+  <!-- SHOW / HIDE PASSWORD -->
+  <script>
+    const pass = document.getElementById("password");
+    const toggle = document.getElementById("togglePass");
+
+    toggle.addEventListener("click", () => {
+      if (pass.type === "password") {
+        pass.type = "text";
+        toggle.setAttribute("name", "hide");
+      } else {
+        pass.type = "password";
+        toggle.setAttribute("name", "show");
+      }
+    });
+  </script>
+
+  <script src="login.js"></script>
+
+</body>
+</html>

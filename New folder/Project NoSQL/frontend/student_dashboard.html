@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", Arial, sans-serif; }
+    body { display: flex; min-height: 100vh; background: #f5f9ff; color: #333; }
+
+    /* ===== HEADER ===== */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: #007bff; color: #fff;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 25px; z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    header h1 { font-size: 22px; font-weight: 600; }
+    .menu-btn { background: transparent; border: none; font-size: 24px; color: #fff; cursor: pointer; margin-right: 10px; }
+    .logout { background: #fff; color: #007bff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+    .logout:hover { background: #e0ebff; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      position: fixed; top: 60px; left: 0; width: 60px; height: calc(100% - 60px); background: #e6f0ff; padding-top: 20px;
+      display: flex; flex-direction: column; gap: 6px; transition: width 0.3s ease; overflow-x: hidden; overflow-y:auto;
+    }
+    .sidebar.active { width: 260px; }
+    .sidebar a { text-decoration: none; color: #007bff; font-weight: bold; padding: 10px 15px; display: flex; align-items: center; gap: 10px; transition: 0.3s; white-space: nowrap; }
+    .sidebar a:hover { background: #007bff; color: #fff; border-radius: 5px; }
+    .sidebar a span { opacity: 0; transition: opacity 0.2s ease; }
+    .sidebar.active a span { opacity: 1; }
+    .submenu { display: none; flex-direction: column; margin-left: 30px; }
+    .submenu.show { display: flex; }
+
+    /* new sidebar panels */
+    .side-panel { padding: 12px 12px; border-radius: 10px; margin: 8px; background: rgba(255,255,255,0.9); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+    .side-panel h4 { font-size: 14px; color:#0b5ed7; margin-bottom:8px; font-weight:700; }
+    .side-panel .muted { color:#666; font-size:13px; margin-bottom:6px; }
+
+    .recent-list { max-height: 260px; overflow:auto; padding-right:6px; }
+    .att-list{ list-style:none; margin:0; padding:0; }
+    .att-item{
+      background:#fff; border:1px solid #e8eefc; border-radius:10px;
+      padding:10px 12px; margin-bottom:10px; box-shadow:0 2px 6px rgba(0,0,0,.05);
+      transform: translateY(8px); opacity: .0; transition: all .25s ease;
+      display:flex; flex-direction:column;
+    }
+    .att-item.in{ transform: translateY(0); opacity: 1; }
+    .att-present{ border-left:6px solid #2ecc71; background:#f5fff8; }
+    .att-absent{  border-left:6px solid #e74c3c; background:#fff5f5; }
+    .att-item .meta{ color:#666; font-size:.82em; margin-top:6px; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .att-item .sub{ font-weight:700; color:#1f56d6; }
+
+    /* ===== CONTENT ===== */
+    .content { margin-left: 60px; padding: 90px 30px 30px; flex: 1; transition: margin-left 0.3s ease; }
+    .sidebar.active ~ .content { margin-left: 260px; }
+    h2#welcome { margin-bottom: 20px; color: #007bff; font-size: 22px; }
+    .data-section { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); overflow-x: auto; }
+    .data-section h3 { margin-bottom: 15px; color: #007bff; }
+
+    table { width: 100%; border-collapse: collapse; }
+    table th, table td { padding: 8px 10px; border: 1px solid #eef5ff; text-align:left; }
+
+    /* ===== ANNOUNCEMENTS ===== */
+    #announcement-list { list-style: none; }
+    #announcement-list li {
+      background: #f8faff; border-left: 5px solid #007bff; padding: 10px 15px; margin-bottom: 10px; border-radius: 5px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+    #announcement-list li small { color: #666; display: block; margin-top: 4px; font-size: 0.85em; }
+
+    /* ===== NOTIFICATION DROPDOWN ===== */
+    .notification-container { position: relative; cursor: pointer; }
+    .bell-icon { font-size: 22px; position: relative; }
+    .badge { position: absolute; top: -8px; right: -8px; background: red; color: white; font-size: 12px; padding: 2px 6px; border-radius: 50%; font-weight: bold; }
+    .dropdown {
+      display: none; list-style: none; position: absolute; right: 0; background: white; width: 260px; max-height: 300px; overflow-y: auto;
+      padding: 10px; margin-top: 10px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); z-index: 1000;
+    }
+    .dropdown li { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; }
+    .dropdown li:last-child { border-bottom: none; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; width: 0; }
+      .sidebar.active { width: 220px; }
+      .content { margin-left: 0; padding: 80px 15px; }
+      .sidebar.active ~ .content { margin-left: 220px; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="menu-btn">☰</button>
+      <h1>EduFy Dashboard</h1>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="notification-container">
+        <div class="bell-icon" onclick="toggleBell()">🔔
+          <span id="bell-badge" class="badge" style="display:none;">0</span>
+        </div>
+        <ul id="bell-dropdown" class="dropdown">
+          <li>Loading...</li>
+        </ul>
+      </div>
+      <button class="logout" onclick="window.location.href='login.html'">Logout</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="leftSidebar">
+    <a href="#">🏠 <span>Home</span></a>
+    <a href="#announcements">📢 <span>Announcements</span></a>
+    <a href="timetables.html">📅 <span>My Timetable</span></a>
+
+    <!-- NEW: direct link to dedicated recent attendance page -->
+    <a href="recent_attendance.html">🧾 <span>Recent Attendance</span></a>
+     <!-- AI Mentor link -->
+      <a href="#" id="open-ai-link">🤖 <span>AI Mentor</span></a>
+    <a href="#" id="settings-link">⚙️ <span>Settings ▾</span></a>
+
+    <div class="submenu" id="settings-submenu">
+      <a href="#">👤 Profile</a>
+      <a href="login.html">🚪 Logout</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <h2 id="welcome">Welcome, Student 👩‍🎓</h2>
+
+    <div id="student-info" class="data-section">
+      <h3>👤 My Profile</h3>
+      <p>Loading...</p>
+    </div>
+
+    <div class="data-section" id="announcements">
+      <h3>📢 Announcements</h3>
+      <ul id="announcement-list">
+        <li>Loading announcements...</li>
+      </ul>
+    </div>
+
+    <div class="data-section" id="attendance-section">
+      <h3>📈 Subject Attendance</h3>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 12px;">
+        <select id="subSelect" style="padding:8px;border:1px solid #cfd9ea;border-radius:8px;min-width:220px;"></select>
+        <input type="date" id="fromDate" style="padding:8px;border:1px solid #cfd9ea;border-radius:8px;">
+        <input type="date" id="toDate"   style="padding:8px;border:1px solid #cfd9ea;border-radius:8px;">
+        <button id="btnLoad" class="logout">Load</button>
+      </div>
+      <div id="subjectStat" style="font-weight:600;">—</div>
+    </div>
+
+    <div class="data-section" id="recent-att">
+      <h3>🗒️ Recent Attendance (you)</h3>
+      <ul id="att-list" class="att-list">
+        <li class="att-item">Loading…</li>
+      </ul>
+    </div>
+
+    <!-- optional timetable table (rendered by fetchTimetable if present) -->
+    <div class="data-section" id="timetable-section" style="display:none;">
+      <h3>📋 Timetable</h3>
+      <table id="timetable-table">
+        <thead>
+          <tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- scripts -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="student_dashboard.js"></script>
+
+  <script>
+    // UI: sidebar/menu
+    const menuBtn = document.querySelector(".menu-btn");
+    const sidebar = document.querySelector(".sidebar");
+    const settingsLink = document.getElementById("settings-link");
+    const settingsSubmenu = document.getElementById("settings-submenu");
+
+    menuBtn.addEventListener("click", () => sidebar.classList.toggle("active"));
+    settingsLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      settingsSubmenu.classList.toggle("show");
+    });
+
+    // Dropdown toggle (defined also in student_dashboard.js)
+    function toggleBell() {
+      const dropdown = document.getElementById("bell-dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    // Note: self-attendance UI removed. student_dashboard.js gracefully checks element existence.
+  </script>
+
+  <!-- AI Mentor widget (paste BEFORE </body>) -->
+<script>
+  // Replace this with your backend URL:
+  const API_BASE = "http://localhost:5001"; // <-- change if your ai-service runs on another host/port
+
+  // 1) find student identifier from the dashboard (try DOM -> localStorage -> ask user)
+  function getStudentId() {
+    // try 1: welcome text e.g. "Welcome, John"
+    const w = document.getElementById('welcome');
+    if (w && w.textContent) {
+      const txt = w.textContent.trim();
+      // crude parse: if "Welcome, Name" pattern
+      const m = txt.match(/Welcome,\s*(.+)$/i);
+      if (m && m[1]) {
+        // if parsed, also save to localStorage for future use
+        localStorage.setItem('ai_student_name', m[1].trim());
+        return m[1].trim();
+      }
+    }
+    // try 2: student-info area (if you fill profile name inside)
+    const info = document.getElementById('student-info');
+    if (info) {
+      const nameEl = info.querySelector('.student-name') || info.querySelector('h4');
+      if (nameEl && nameEl.textContent) {
+        localStorage.setItem('ai_student_name', nameEl.textContent.trim());
+        return nameEl.textContent.trim();
+      }
+    }
+    // try 3: localStorage (previously saved)
+    const saved = localStorage.getItem('ai_student_name');
+    if (saved) return saved;
+    // fallback: ask user once
+    const ask = prompt('Enter your name (for AI Mentor to save your data):');
+    if (ask) {
+      localStorage.setItem('ai_student_name', ask.trim());
+      return ask.trim();
+    }
+    return 'guest_user';
+  }
+
+  // ensure we have a stable user id (prefer explicit saved uid)
+  function ensureStudentIdentity() {
+    let uid = localStorage.getItem('ai_student_userid');
+    let name = localStorage.getItem('ai_student_name') || getStudentId();
+    if (!uid) {
+      // try to derive from name (not secure — ideally use server-provided id)
+      uid = 'u_' + (name.replace(/\s+/g, '_').toLowerCase()) + '_' + Date.now();
+      localStorage.setItem('ai_student_userid', uid);
+    }
+    localStorage.setItem('ai_student_name', name);
+    return { uid, name };
+  }
+
+  // Try to gather tasks & progress from multiple possible sources:
+  // 1) if your page exposes a global `getTasksForExport()` function, use it
+  // 2) else try localStorage keys 'student_tasks' / 'student_progress'
+  // 3) else attempt to read recent-att DOM items as a fallback
+  function collectStudentData() {
+    const out = { tasks: [], progress: { completed: 0, total: 0 } };
+
+    try {
+      if (window.getTasksForExport && typeof window.getTasksForExport === 'function') {
+        out.tasks = window.getTasksForExport() || [];
+      } else {
+        const raw = localStorage.getItem('student_tasks') || localStorage.getItem('tasks') || null;
+        if (raw) {
+          try { out.tasks = JSON.parse(raw) } catch(e) {}
+        }
+      }
+    } catch(e){ console.warn('collect tasks failed', e); }
+
+    // progress
+    try {
+      const p = localStorage.getItem('student_progress') || null;
+      if (p) {
+        try { out.progress = JSON.parse(p); } catch(e) {}
+      } else {
+        // fallback: derive from tasks if present
+        if (Array.isArray(out.tasks) && out.tasks.length) {
+          const completed = out.tasks.filter(t => t.done).length;
+          out.progress = { completed, total: out.tasks.length };
+        }
+      }
+    } catch(e){ console.warn('collect progress failed', e); }
+
+    // last fallback: try reading attendance list as recent tasks (not ideal)
+    if ((!out.tasks || !out.tasks.length) && document.getElementById('att-list')) {
+      try {
+        const lis = Array.from(document.querySelectorAll('#att-list .att-item'));
+        out.tasks = lis.map((li, idx) => {
+          const title = li.querySelector('.sub') ? li.querySelector('.sub').textContent.trim() : (li.textContent || 'Entry ' + (idx+1));
+          return { title, duration: 15, done: li.classList.contains('att-present') };
+        });
+        const completed = out.tasks.filter(t=>t.done).length;
+        out.progress = { completed, total: out.tasks.length };
+      } catch(e){ console.warn('fallback read att-list failed', e); }
+    }
+
+    return out;
+  }
+
+  // open AI Mentor and transfer data via one-time localStorage key
+  function openAiMentorWithData() {
+    const identity = ensureStudentIdentity();
+    const collected = collectStudentData();
+    const payload = {
+      user: identity.uid,
+      name: identity.name,
+      tasks: collected.tasks,
+      progress: collected.progress,
+      transferredAt: new Date().toISOString()
+    };
+
+    const key = 'ai_transfer_' + Date.now();
+    try {
+      localStorage.setItem(key, JSON.stringify(payload));
+    } catch (e) {
+      console.warn('localStorage set failed for transferKey', e);
+      // if localStorage fails, fallback to opening blank mentor and letting user login there
+    }
+
+    // adjust this URL to your AI Mentor page location (same-origin recommended)
+    const aiUrl = `http://localhost:5500/ai-service/index.html?transferKey=${encodeURIComponent(key)}`;
+    window.open(aiUrl, '_blank', 'width=900,height=700');
+  }
+
+  // wire the sidebar AI link to open with data (safe - checks element existence)
+  (function wireOpenAiLink() {
+    const link = document.getElementById('open-ai-link');
+    if (link) {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        openAiMentorWithData();
+      });
+    }
+  })();
+
+  // expose a helper for other scripts to call explicitly
+  window.openAiMentorWithData = openAiMentorWithData;
+
+  // ensure identity on page load
+  ensureStudentIdentity();
+
+  // show student name inside the AI widget (if added later)
+  const STUDENT_USER = localStorage.getItem('ai_student_name') || 'guest_user';
+
+  // add widget UI container (unchanged from before)
+  const root = document.createElement('div');
+  root.id = 'ai-mentor-root';
+  root.innerHTML = `
+    <div id="ai-widget" style="position:fixed;right:18px;bottom:18px;z-index:99999;">
+      <button id="ai-open" style="background:#4b63ff;color:white;padding:12px 16px;border-radius:28px;border:none;cursor:pointer">Ask Mentor</button>
+      <div id="ai-panel" style="display:none;width:360px;height:480px;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.12);overflow:hidden;margin-top:10px;">
+        <div style="padding:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <div>AI Mentor — <small style="color:#666">User: <span id="ai-user-name"></span></small></div>
+          <button id="ai-close" style="background:transparent;border:none;font-size:18px;cursor:pointer">✖</button>
+        </div>
+        <div id="ai-messages" style="height:340px;overflow:auto;padding:12px;background:#f7f9ff"></div>
+        <div style="display:flex;gap:8px;padding:10px;border-top:1px solid #eee">
+          <input id="ai-input" placeholder="Type your doubt..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #eee"/>
+          <button id="ai-send" style="background:#4b63ff;color:#fff;padding:8px 12px;border-radius:8px;border:none">Send</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(root);
+
+  const aiUserNameEl = document.getElementById('ai-user-name');
+  if (aiUserNameEl) aiUserNameEl.textContent = STUDENT_USER;
+
+  // wire widget buttons (unchanged behaviour)
+  const openLink = document.getElementById('open-ai-link');
+  const aiOpenBtn = document.getElementById('ai-open');
+  const aiPanel = document.getElementById('ai-panel');
+  const aiClose = document.getElementById('ai-close');
+  const aiSend = document.getElementById('ai-send');
+  const aiInput = document.getElementById('ai-input');
+  const aiMessages = document.getElementById('ai-messages');
+
+  function showPanel() { if (aiPanel) { aiPanel.style.display = 'block'; if (aiInput) aiInput.focus(); } }
+  function hidePanel() { if (aiPanel) aiPanel.style.display = 'none'; }
+
+  if (openLink) openLink.addEventListener('click', (e) => { e.preventDefault(); showPanel(); });
+  if (aiOpenBtn) aiOpenBtn.addEventListener('click', () => showPanel());
+  if (aiClose) aiClose.addEventListener('click', () => hidePanel());
+
+  function appendMessage(text, who='ai') {
+    if (!aiMessages) return;
+    const wrap = document.createElement('div');
+    wrap.style.margin = '8px 0';
+    if (who === 'user') {
+      wrap.innerHTML = `<div style="text-align:right;"><div style="display:inline-block;background:#d9f7d9;padding:10px;border-radius:8px;max-width:80%;">${text}</div></div>`;
+    } else {
+      wrap.innerHTML = `<div style="text-align:left;"><div style="display:inline-block;background:#f1f6ff;padding:10px;border-radius:8px;max-width:80%;">${text}</div></div>`;
+    }
+    aiMessages.appendChild(wrap);
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+  }
+
+  async function sendChat(promptText) {
+    appendMessage(promptText, 'user');
+    const temp = document.createElement('div'); temp.textContent = 'Mentor typing...'; temp.style.opacity = 0.8; if (aiMessages) aiMessages.appendChild(temp); if (aiMessages) aiMessages.scrollTop = aiMessages.scrollHeight;
+
+    try {
+      const res = await fetch(`${API_BASE}/chat`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ user: STUDENT_USER, prompt: promptText })
+      });
+      const json = await res.json();
+      temp.remove();
+      appendMessage((json.reply || 'No response').replace(/\n/g,'<br/>'), 'ai');
+
+      // optionally save chat record (explicit)
+      fetch(`${API_BASE}/chats`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ user: STUDENT_USER, prompt: promptText, reply: json.reply })
+      }).catch(()=>{});
+    } catch (err) {
+      temp.textContent = 'Error connecting to AI';
+      console.error('chat error', err);
+    }
+  }
+
+  if (aiSend && aiInput) {
+    aiSend.addEventListener('click', () => {
+      const t = aiInput.value.trim();
+      if (!t) return;
+      sendChat(t);
+      aiInput.value = '';
+    });
+
+    aiInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); aiSend.click(); } });
+  }
+
+  // expose helpers for other scripts to call
+  window.openAiMentorWithData = openAiMentorWithData;
+  window.ai_saveTasksForUser = async function(tasksArray) {
+    try {
+      await fetch(`${API_BASE}/tasks`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ user: localStorage.getItem('ai_student_userid') || 'guest_user', tasks: tasksArray })
+      });
+    } catch(e){ console.warn('save tasks failed', e); }
+  };
+
+  window.ai_saveProgressForUser = async function(completed, total) {
+    try {
+      const res = await fetch(`${API_BASE}/progress`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ user: localStorage.getItem('ai_student_userid') || 'guest_user', completed, total })
+      });
+      const json = await res.json();
+      if (json.plan && json.plan.summary) appendMessage('Plan suggestion: ' + json.plan.summary, 'ai');
+    } catch(e){ console.warn('save progress failed', e); }
+  };
+
+  // initial greeting
+  appendMessage('Hi ' + STUDENT_USER + '! Ask me your doubt or click the AI Mentor link to open the full mentor with your data.', 'ai');
+
+</script>
+</body>
+</html>

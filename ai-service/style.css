@@ -1,0 +1,66 @@
+/* Premium V2 styles — modern layout + animations */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#eef6ff,#f7f9ff);color:#14213d;min-height:100vh}
+/* Header */
+.header{background:linear-gradient(90deg,#4b63ff,#7b9bff);padding:18px 28px;color:white;box-shadow:0 6px 25px rgba(75,99,255,0.18)}
+.brand{display:flex;flex-direction:column;gap:4px}
+.title{font-size:22px;font-weight:700}
+.tag{font-size:13px;opacity:0.95}
+
+/* Layout */
+.container{display:grid;grid-template-columns:1fr 380px;gap:22px;padding:28px;max-width:1100px;margin:18px auto}
+.card{background:linear-gradient(180deg,rgba(255,255,255,0.95),#ffffff);border-radius:16px;padding:18px;box-shadow:0 8px 30px rgba(20,33,61,0.06)}
+.left-col{display:flex;flex-direction:column;gap:18px}
+.right-col{display:flex;flex-direction:column;gap:18px}
+
+/* Hero */
+.hero h2{font-size:20px;margin-bottom:6px}
+.hero p{color:#344767;margin-bottom:12px}
+.btn-primary{background:#4b63ff;color:white;padding:10px 16px;border-radius:10px;border:none;cursor:pointer;box-shadow:0 8px 20px rgba(75,99,255,0.2)}
+
+/* Tasks */
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.small{background:#eef2ff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer}
+.small.ghost{background:transparent;border:1px solid #e6eaf9}
+.task-list{list-style:none;display:flex;flex-direction:column;gap:10px;max-height:260px;overflow:auto;padding-right:6px}
+.task-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:linear-gradient(180deg,#fbfdff,#f6f9ff);box-shadow:0 4px 12px rgba(17,24,39,0.03)}
+.task-item .left{display:flex;gap:10px;align-items:center}
+.task-title{font-weight:600}
+.task-actions button{background:transparent;border:none;cursor:pointer;font-size:16px}
+
+/* Plan */
+.plan-summary{color:#2b3a67;line-height:1.5;padding-top:6px}
+
+/* Progress */
+.progress-outer{height:18px;background:#eef2ff;border-radius:999px;overflow:hidden;margin-top:8px}
+.progress-inner{height:100%;background:linear-gradient(90deg,#4b63ff,#7b9bff);width:0%;transition:width 800ms cubic-bezier(.2,.9,.3,1)}
+.progress-text{margin-top:8px;font-size:14px;color:#344767}
+
+/* Chat */
+.chat-card{display:flex;flex-direction:column;height:320px}
+.chat-header{font-weight:600;margin-bottom:8px}
+.messages{flex:1;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
+.msg{padding:10px;border-radius:10px;background:#f1f6ff;max-width:85%}
+.msg.user{align-self:flex-end;background:#d9f7d9}
+.msg.ai{align-self:flex-start;background:#f8f9ff}
+.chat-input{display:flex;gap:8px;margin-top:8px}
+.chat-input input{flex:1;padding:10px;border-radius:10px;border:1px solid #eef2ff;outline:none}
+.chat-input button{padding:10px 14px;border-radius:10px;background:#4b63ff;color:white;border:none;cursor:pointer}
+
+/* Pulse animation */
+.pulse{display:flex;gap:8px;align-items:center;margin-top:10px}
+.dot{width:12px;height:12px;border-radius:50%;background:#4b63ff;animation:beat 1.6s infinite ease-in-out;opacity:0.95}
+.dot.delay{animation-delay:0.15s}
+.dot.delay2{animation-delay:0.3s}
+@keyframes beat{0%{transform:scale(.8);opacity:.6}50%{transform:scale(1.25);opacity:1}100%{transform:scale(.8);opacity:.6}}
+
+/* Footer */
+.footer{text-align:center;padding:18px;margin-top:18px;color:#556}
+
+@media(max-width:980px){
+  .container{grid-template-columns:1fr;padding:16px}
+  .right-col{order:2}
+  .left-col{order:1}
+}

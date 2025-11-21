@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordinator Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header>
+    <h1>EduFy Timetable Dashboard</h1>
+    <button onclick="logout()">Logout</button>
+  </header>
+
+  <section class="container">
+    <h2>Add New Class</h2>
+    <form id="addClassForm">
+      <select id="day" required>
+        <option value="">Select Day</option>
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+      </select>
+
+      <input type="time" id="startTime" required>
+      <input type="time" id="endTime" required>
+      <input type="text" id="subject" placeholder="Subject" required>
+      <input type="text" id="roomno" placeholder="Room no" required>
+      <input type="text" id="teacher" placeholder="Teacher" required>
+      <input type="text" id="classGroup" placeholder="Class Group" required>
+
+      <button type="submit">Add Class</button>
+    </form>
+  </section>
+
+  <section class="container">
+    <h2>Weekly Timetable</h2>
+    <div class="timetable" id="timetableContainer">
+      <!-- Classes will be dynamically added here -->
+    </div>
+  </section>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

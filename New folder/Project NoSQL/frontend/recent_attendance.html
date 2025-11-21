@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Recent Attendance — EduFy</title>
+  <style>
+    body{font-family:Inter,system-ui,Arial;margin:0;background:#f5f9ff;color:#111}
+    header{background:#007bff;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+    a.back{color:#fff;text-decoration:none;font-weight:600}
+    .container{max-width:1100px;margin:22px auto;padding:0 16px}
+    .card{background:#fff;padding:16px;border-radius:10px;box-shadow:0 8px 30px rgba(11,81,214,0.06);margin-bottom:16px}
+    .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    select,input{padding:8px;border:1px solid #dfe8ff;border-radius:8px}
+    button.btn{background:#007bff;color:#fff;border:none;padding:9px 12px;border-radius:8px;cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px;border-bottom:1px solid #eef4ff;text-align:left}
+    th{background:#f8fbff}
+    .present{color:#076; font-weight:700}
+    .absent{color:#b21; font-weight:700}
+    .pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:12px}
+    .muted{color:#666;font-size:13px}
+    .empty{padding:24px;text-align:center;color:#666}
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back" href="student_dashboard.html">← Back</a>
+    <div>Recent Attendance (Teacher) — Detailed</div>
+    <div style="width:80px"></div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="filters">
+          <label class="muted">Subject</label>
+          <select id="fSubject"><option value="">All</option></select>
+
+          <label class="muted">From</label>
+          <input type="date" id="fFrom">
+
+          <label class="muted">To</label>
+          <input type="date" id="fTo">
+
+          <label class="muted">Status</label>
+          <select id="fStatus"><option value="">All</option><option value="present">Present</option><option value="absent">Absent</option></select>
+
+          <button id="btnSearch" class="btn">Filter</button>
+          <button id="btnClear" style="margin-left:6px;padding:8px;border-radius:8px;border:1px solid #dfe8ff;background:#fff">Clear</button>
+        </div>
+
+        <div class="muted" id="totalText">Loading…</div>
+      </div>
+
+      <div id="tableWrap" style="margin-top:12px">
+        <table id="attTable">
+          <thead><tr><th>#</th><th>Subject</th><th>Class</th><th>Status</th><th>Marked At</th><th>Start</th><th>Teacher</th></tr></thead>
+          <tbody id="attBody"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+        </table>
+
+        <div class="pager">
+          <div class="muted" id="pageInfo"></div>
+          <button id="prevBtn" class="btn" style="background:#eef4ff;color:#007bff">Prev</button>
+          <button id="nextBtn" class="btn">Next</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="recent_attendance.js"></script>
+</body>
+</html>

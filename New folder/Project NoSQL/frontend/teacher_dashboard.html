@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Dashboard</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
+    body{display:flex;min-height:100vh;background:#f5f9ff;color:#333}
+    .header{position:fixed;top:0;left:0;right:0;height:60px;background:#007bff;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 20px;box-shadow:0 2px 6px rgba(0,0,0,.1);z-index:1000}
+    .header h1{font-size:20px}
+    .logout{background:#fff;color:#007bff;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;font-weight:bold}
+    .sidebar{position:fixed;top:60px;left:0;width:200px;height:100%;background:#e6f0ff;padding-top:20px;display:flex;flex-direction:column;gap:15px}
+    .sidebar a{text-decoration:none;color:#007bff;font-weight:bold;padding:10px 20px;transition:.3s}
+    .sidebar a:hover{background:#007bff;color:#fff;border-radius:5px}
+    .content{margin-left:200px;padding:80px 30px 30px;flex:1}
+    .content h2{margin-bottom:20px;color:#007bff}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+    .card{background:#fff;padding:30px;border-radius:10px;text-align:center;font-weight:bold;box-shadow:0 4px 8px rgba(0,0,0,.1);cursor:pointer;transition:.3s}
+    .card:hover{background:#007bff;color:#fff;transform:translateY(-5px)}
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;z-index:2000}
+    .modal.show{display:block}
+    .modal__overlay{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+    .modal__dialog{position:relative;margin:6rem auto;width:min(720px,92vw);background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
+    .modal__header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#f3f7ff;border-bottom:1px solid #e7eefc}
+    .modal__body{max-height:60vh;overflow:auto;padding:12px 16px}
+    .modal__footer{padding:12px 16px;background:#f9fbff;border-top:1px solid #eef3ff}
+    .btn{background:#007bff;color:#fff;border:none;padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+    .annlist{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .annitem{padding:12px 14px;border:1px solid #e6eefc;border-radius:10px;background:#fafcff}
+    .annitem__top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+    .annitem__teacher{font-weight:700;color:#1f56d6}
+    .annitem__time{font-size:12px;color:#666;white-space:nowrap}
+    .muted{color:#666}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1><img src="../images/EduFy.png" alt="EduFy" style="position:absolute;height:200px;top:50%;transform:translateY(-50%)"/></h1>
+    <button class="logout" id="btnLogout">Logout</button>
+  </header>
+
+  <aside class="sidebar">
+    <a href="teacher_dashboard.html">🏠 Home</a>
+    <a href="announcement.html">📢 Announcements</a>
+    <a href="#">📚 Upload Notes</a>
+    <a href="view_students.html">👥 Manage Students</a>
+    <a href="#" id="btnOpenAnns">🕘 Past Announcements</a>
+  </aside>
+
+  <main class="content">
+    <h2 id="welcomeTitle">Welcome, Teacher 👨‍🏫</h2>
+
+    <div class="cards">
+      <div class="card" id="cardMakeAnn">Make Announcement</div>
+      <div class="card">Upload Notes</div>
+      <div class="card" id="cardViewStudents">View Students</div>
+      <div class="card" id="cardPastAnns">Past Announcements</div>
+    </div>
+
+    <!-- ✅ Take Attendance card with a FIXED id -->
+    <div class="card" id="btnTakeAttendance">Take Attendance</div>
+
+    <!-- Attendance panel -->
+    <section class="data-section" id="att-panel" style="display:none;margin-top:20px;">
+      <h3>🎯 Today’s Classes</h3>
+      <div id="att-classes">Loading...</div>
+
+      <div id="att-roster-wrap" style="display:none;margin-top:15px;">
+        <h3 id="att-class-title">Class</h3>
+        <div style="margin:8px 0;">
+          <button id="mark-all-present">Mark All Present</button>
+          <button id="save-att">Save</button>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr><th style="text-align:left;">Student</th><th>Email</th><th>Present?</th></tr></thead>
+          <tbody id="att-roster"></tbody>
+        </table>
+        <div style="margin-top:10px;">
+          <button id="close-class">Close & mark remaining ABSENT</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Past Announcements modal (kept) -->
+  <div id="annModal" class="modal" aria-hidden="true">
+    <div class="modal__overlay"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true">
+      <div class="modal__header">
+        <h3>📢 Previous Announcements</h3>
+        <button class="btn" id="annClose">✕</button>
+      </div>
+      <div class="modal__body">
+        <ul id="annModalList" class="annlist"><li class="muted">Loading…</li></ul>
+      </div>
+      <div class="modal__footer">
+        <button class="btn" id="annClose2">Close</button>
+      </div>
+    </div>
+  </div>
+<script>
+    document.getElementById("cardMakeAnn").onclick = function () {
+        window.location.href = "announcement.html";
+    };
+</script>
+<script>
+    document.getElementById("cardViewStudents").onclick = function () {
+        window.location.href = "view_students.html";
+    };
+</script>
+
+  <!-- libs -->
+  <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+
+  <!-- page scripts (order matters; keep at end) -->
+  <script src="teacher_attendance.js" defer></script>
+  <script src="teacher_announcements.js" defer></script>
+  <script>
+    // small glue to bind buttons after DOM is parsed
+    document.addEventListener('DOMContentLoaded', () => {
+      // logout
+      document.getElementById('btnLogout').onclick = () => {
+        localStorage.removeItem('teacherId');
+        localStorage.removeItem('teacherName');
+        location.href = 'login.html';
+      };
+
+      // Take Attendance
+      const takeBtn = document.getElementById('btnTakeAttendance');
+      if (takeBtn) takeBtn.addEventListener('click', () => {
+        console.log('Take Attendance clicked'); // debug
+        if (window.openAttendance) window.openAttendance();
+      });
+
+      // Past announcements open/close
+      const annModal = document.getElementById('annModal');
+      const openAnn  = () => { annModal.classList.add('show'); if (window.loadAnns) window.loadAnns(); };
+      const closeAnn = () => annModal.classList.remove('show');
+      document.getElementById('btnOpenAnns').onclick = openAnn;
+      document.getElementById('cardPastAnns').onclick = openAnn;
+      document.getElementById('annClose').onclick = closeAnn;
+      document.getElementById('annClose2').onclick = closeAnn;
+      annModal.querySelector('.modal__overlay').onclick = closeAnn;
+
+      // greeting (optional, doesn’t affect attendance)
+      const tName = localStorage.getItem('teacherName');
+      if (tName) document.getElementById('welcomeTitle').textContent = `Welcome, ${tName} 👨‍🏫`;
+    });
+  </script>
+</body>
+</html>

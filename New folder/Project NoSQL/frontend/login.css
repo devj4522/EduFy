@@ -1,0 +1,151 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Stylish Blue Background */
+body {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa, #2563eb);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Home Button */
+.home-btn {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  background: rgba(255,255,255,0.15);
+  padding: 10px 12px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+  transition: 0.3s;
+  z-index: 20;
+}
+.home-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Background Icons */
+.bg-item {
+  position: absolute;
+  opacity: 0.2;
+  width: 130px;
+  filter: drop-shadow(0px 8px 15px rgba(0,0,0,0.3));
+}
+.bag {
+  top: -20px;
+  left: -20px;
+  transform: rotate(-15deg);
+}
+.pen {
+  bottom: 10px;
+  right: 50px;
+  width: 110px;
+  transform: rotate(25deg);
+}
+.book {
+  top: 120px;
+  right: -20px;
+  width: 150px;
+  transform: rotate(10deg);
+}
+
+/* Login Box */
+.login-box {
+  width: 380px;
+  background: rgba(255,255,255,0.93);
+  padding: 36px 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+  animation: fadeIn 0.5s ease;
+  position: relative;
+  z-index: 10;
+  backdrop-filter: blur(6px);
+}
+
+/* Title */
+.title {
+  text-align: center;
+  color: #0ea5e9;  /* Sky blue */
+  font-size: 28px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Quote */
+.quote {
+  text-align: center;
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 20px;
+  opacity: 0.85;
+}
+
+/* Input Fields */
+.input-box {
+  margin-bottom: 18px;
+}
+
+.input-box label {
+  font-size: 14px;
+  color: #334155;
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f5f9;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+.input-field input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+}
+
+/* Login Button */
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: #0ea5e9;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.25s;
+  font-weight: 500;
+}
+.btn:hover {
+  background: #0284c7;
+}
+
+/* Error Message */
+.error-msg {
+  color: red;
+  text-align: center;
+  margin-top: 12px;
+  display: none;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; }
+}

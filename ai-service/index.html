@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Mentor Premium — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <h1 class="title">AI Mentor Premium</h1>
+      <div class="tag">Personalized study plans • Real-time mentor</div>
+    </div>
+  </header>
+<script>
+  function readTransferPayloadFromQuery(){
+    try {
+      const url = new URL(window.location.href);
+      const key = url.searchParams.get('transferKey');
+      if (!key) return null;
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const payload = JSON.parse(raw);
+      try { localStorage.removeItem(key); } catch(e){}
+      return payload;
+    } catch(e) { console.warn('transfer read failed', e); return null; }
+  }
+
+  const transfer = readTransferPayloadFromQuery();
+  window.MENTOR_USER = transfer?.user || localStorage.getItem('ai_student_userid') || 'guest_user';
+  window.MENTOR_NAME = transfer?.name || localStorage.getItem('ai_student_name') || 'Guest';
+  if (transfer?.tasks) {
+    try { localStorage.setItem('mentor_initial_tasks', JSON.stringify(transfer.tasks)); } catch(e){}
+  }
+  if (transfer?.progress) {
+    try { localStorage.setItem('mentor_initial_progress', JSON.stringify(transfer.progress)); } catch(e){}
+  }
+  console.log('Mentor loaded for', window.MENTOR_USER, window.MENTOR_NAME);
+</script>
+
+  <main class="container">
+    <section class="left-col">
+      <div class="hero card">
+        <h2>Your Smart AI Mentor</h2>
+        <p>Instant Doubts • Adaptive Plans • Progress Tracking</p>
+        <button class="btn-primary" onclick="regeneratePlan()">Get Today’s Plan</button>
+      </div>
+
+      <div class="card tasks-card">
+        <div class="card-header">
+          <h3>Today's Tasks</h3>
+          <div class="card-actions">
+            <button class="small" onclick="addTaskPrompt()">+ Add</button>
+            <button class="small ghost" onclick="clearTasks()">Clear</button>
+          </div>
+        </div>
+        <ul id="taskList" class="task-list"></ul>
+      </div>
+
+      <div class="card plan-card">
+        <div class="card-header">
+          <h3>Study Plan (Auto-updating)</h3>
+          <button class="small" onclick="regeneratePlan()">Regenerate</button>
+        </div>
+        <div id="planSummary" class="plan-summary">No plan yet — click “Get Today’s Plan”.</div>
+      </div>
+    </section>
+
+    <section class="right-col">
+      <div class="card progress-card">
+        <h3>Progress</h3>
+        <div class="progress-outer">
+          <div id="progressBar" class="progress-inner" style="width:0%"></div>
+        </div>
+        <div id="progressText" class="progress-text">0% completed</div>
+      </div>
+
+      <div class="card chat-card">
+        <div class="chat-header">Ask Mentor</div>
+        <div id="messages" class="messages"></div>
+        <div class="chat-input">
+          <input id="prompt" placeholder="Type your doubt... (e.g., Explain 2NF with example)" />
+          <button id="sendBtn">Send</button>
+        </div>
+      </div>
+
+      <div class="card animation-card">
+        <h4>Real-time Mentor Pulse</h4>
+        <div class="pulse">
+          <div class="dot"></div>
+          <div class="dot delay"></div>
+          <div class="dot delay2"></div>
+        </div>
+        <p class="muted">Live activity animation — shows mentor responsiveness.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+
+  <!-- bootstrap to receive transferKey (from Student Dashboard) -->
+  <script>
+  (async function bootstrapAiMentor() {
+    const API_BASE = 'http://localhost:5001';
+    function getQueryParam(name){ return new URLSearchParams(location.search).get(name) }
+    function safeParse(s){ try{return JSON.parse(s)}catch(e){return null} }
+
+    const key = getQueryParam('transferKey');
+    let init = null;
+    if(key){
+      const raw = localStorage.getItem(key);
+      init = safeParse(raw);
+      try { localStorage.removeItem(key); } catch(e){}
+    }
+    // fallback to localStorage saved user
+    if(!init){
+      const uid = localStorage.getItem('ai_student_userid') || localStorage.getItem('ai_student_name') || 'guest_user';
+      init = { user: uid, name: localStorage.getItem('ai_student_name') || uid, tasks: [], progress: {} };
+    }
+
+    // populate UI elements on AI Mentor page
+    const pct = init.progress && init.progress.total ? Math.round((init.progress.completed/init.progress.total)*100) : 0;
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    if(progressBar) progressBar.style.width = pct + '%';
+    if(progressText) progressText.textContent = pct + '% completed';
+
+    // populate tasks list on AI Mentor page if element exists
+    const taskListEl = document.getElementById('taskList');
+    if(taskListEl && Array.isArray(init.tasks)){
+      taskListEl.innerHTML = '';
+      init.tasks.forEach(t => {
+        const li = document.createElement('li'); li.textContent = `${t.title} — ${t.duration || ''}m`; taskListEl.appendChild(li);
+      });
+    }
+
+    // expose init data and regeneratePlan
+    window._AI_INIT = init;
+
+    window.regeneratePlan = async function(){
+      try{
+        document.getElementById('planSummary').textContent = 'Generating plan...';
+        const resp = await fetch(`${API_BASE}/generate-plan`, {
+          method:'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ user: init.user, tasks: init.tasks || [], progress: init.progress || {} })
+        });
+        const j = await resp.json();
+        if(j.plan) document.getElementById('planSummary').textContent = j.plan.summary || JSON.stringify(j.plan);
+        else document.getElementById('planSummary').textContent = 'No plan returned';
+      }catch(err){
+        console.error(err);
+        document.getElementById('planSummary').textContent = 'Plan generation error';
+      }
+    }
+
+    // wire chat send button (script.js already wires but ensure availability)
+    // script.js will use CURRENT_USER from localStorage to include user in requests
+  })();
+  </script>
+</body>
+</html>

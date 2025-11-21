@@ -1,0 +1,419 @@
+/* ====== RESET ====== */
+/* Sabhi elements ka default margin aur padding hatana,
+   aur box-sizing ko border-box banake height/width calculation sahi karna */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ====== BODY ====== */
+/* Puri website ke liye default font, background aur smooth scroll behavior */
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f9fa;   /* halka grey background */
+  color: #333;           /* default text color dark grey */
+  scroll-behavior: smooth; /* smooth scroll jab anchor link click ho */
+}
+
+/* ====== HEADER ====== */
+/* Top header bar ka layout aur styling */
+.header {
+  position: relative;              
+  display: flex;                   /* logo aur nav ko ek line mai lane ke liye */
+  justify-content: space-between;  /* left = logo, right = nav links */
+  align-items: center;             
+  background: #007bff;             /* blue background */
+  padding: 15px 30px;
+  height: 70px;                    
+  color: white;                    
+}
+
+/* Header ke andar logo ka size aur position */
+.header h1 img {
+  position: absolute;              
+  height: 200px;                   
+  top: 50%;                        
+  transform: translateY(-50%);     
+}
+
+/* Navigation list ke liye flex row */
+.nav-links {
+  list-style: none;                
+  display: flex;                   
+  gap: 25px; 
+  position:relative;
+  left:350px;                      
+}
+
+/* Nav link design */
+.nav-links a {
+  color: white;                    
+  text-decoration: none;           
+  font-weight: 500;                
+  font-size: 1rem;                 
+  transition: color 0.3s ease;     
+}
+
+/* Nav link hover effect */
+.nav-links a:hover {
+  color: #ffe600;   /* yellow on hover */                
+}
+
+/* Header ke button (Login/Register) ki styling */
+.btn {
+  background: white;               
+  color: #007bff;                  
+  padding: 10px 22px;              
+  border: none;                    
+  border-radius: 6px;              
+  cursor: pointer;                 
+  font-weight: bold;               
+  transition: 0.3s ease;           
+}
+
+/* Button hover effect */
+.btn:hover {
+  background: #f1f1f1;             
+}
+
+
+
+/* Infinite glowing pulse */
+@keyframes glow {
+  0%   { box-shadow: 0 0 5px #007bff, 0 0 10px #007bff; }
+  100% { box-shadow: 0 0 15px #00c6ff, 0 0 25px #00c6ff; }
+}
+
+/* Animate class jo JS add karega */
+.btn.animate,
+.start-btn.animate {
+  animation: buttonBounce 0.10s ease-out, glow 2s ease-in-out infinite alternate;
+}
+
+
+/* Responsive header: jab screen chhoti ho (mobile) */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;        
+    gap: 12px;                     
+    padding: 15px 20px;            
+  }
+
+  .nav-links {
+    flex-direction: column;        
+    gap: 10px;                     
+    align-items: center;           
+  }
+}
+
+/* ====== HERO SECTION ====== */
+/* Top banner section background aur center text */
+.hero {
+  background: linear-gradient(to right, #007bff, #00c6ff); 
+  color: white;                   
+  text-align: center;             
+  padding: 80px 20px;             
+}
+
+/* Hero heading ke liye bada font aur entry animation */
+.hero h2 {
+  font-size: 2.5rem;              
+  margin-bottom: 10px;            
+  animation: fadeIn 1.5s ease-in; 
+}
+
+/* Hero ka paragraph animation ke sath */
+.hero p {
+  max-width: 600px;               
+  margin: 0 auto 20px;            
+  font-size: 1.1rem;              
+  animation: fadeIn 2s ease-in;   
+}
+
+/* Hero section ke button (Get Started) */
+.start-btn {
+  background: white;
+  color: #007bff;
+  font-size: 1rem;
+  padding: 10px 25px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+/* Hover effect on hero button */
+.start-btn:hover {
+  background: #f1f1f1;
+}
+
+/* ====== FEATURES SECTION ====== */
+/* Features section ka container */
+.features {
+  padding: 50px 20px;
+  background: #f8f9fa;            
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+/* Features ko grid mai arrange karna */
+.features-grid {
+  display: grid;                   
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 25px;                       
+  max-width: 1100px;               
+  margin: auto;
+  padding: 20px 0;
+}
+
+/* Ek-ek feature card design + scroll animation ke liye hidden state */
+.feature-card {
+  background: white;
+  padding: 25px;
+  text-align: center;
+  border-radius: 12px;             
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  /* Pehle hidden rakho */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease-in-out;
+}
+
+/* Jab show class mile to visible ho jaye */
+.feature-card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animation delay for ek-ek karke effect */
+.feature-card:nth-child(1) { transition-delay: 0.1s; }
+.feature-card:nth-child(2) { transition-delay: 0.2s; }
+.feature-card:nth-child(3) { transition-delay: 0.3s; }
+.feature-card:nth-child(4) { transition-delay: 0.4s; }
+.feature-card:nth-child(5) { transition-delay: 0.5s; }
+.feature-card:nth-child(6) { transition-delay: 0.6s; }
+.feature-card:nth-child(7) { transition-delay: 0.7s; }
+.feature-card:nth-child(8) { transition-delay: 0.8s; }
+.feature-card:nth-child(9) { transition-delay: 0.9s; }
+
+/* Hover effect (uparse thoda lift ho jaye aur shadow badhe) */
+.feature-card:hover {
+  transform: translateY(-8px);     
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Feature ke icons ka size */
+.feature-card .icon {
+  font-size: 2.5rem;               
+  margin-bottom: 12px;
+}
+
+/* Feature title */
+.feature-card h3 {
+  color: #007bff;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+/* Feature description text */
+.feature-card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Responsive Features: small screen mai 2 ya 1 column */
+@media (max-width: 900px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+@media (max-width: 600px) {
+  .features-grid {
+    grid-template-columns: 1fr; 
+  }
+}
+
+/* ====== HOW IT WORKS SECTION ====== */
+.how {
+  padding: 50px 20px;
+  background: #fff;
+  text-align: center;
+}
+
+.how h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #007bff;
+}
+
+/* Steps ko vertically stack karna */
+.steps {
+  display: flex;
+  flex-direction: column;          
+  gap: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+/* Step card */
+.step {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;              
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease-in-out;
+}
+
+/* Step number badge */
+.step-number {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background: #007bff;
+  color: white;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-weight: bold;
+}
+
+/* Jab show mile to step visible */
+.step.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Odd steps left se slide, even steps right se */
+.step:nth-child(odd) {
+  transform: translateX(-50px);
+}
+.step:nth-child(even) {
+  transform: translateX(50px);
+}
+.step.show:nth-child(odd),
+.step.show:nth-child(even) {
+  transform: translateX(0);
+}
+
+/* Delay sequence */
+.step:nth-child(1) { transition-delay: 0.1s; }
+.step:nth-child(2) { transition-delay: 0.3s; }
+.step:nth-child(3) { transition-delay: 0.5s; }
+.step:nth-child(4) { transition-delay: 0.7s; }
+.step:nth-child(5) { transition-delay: 0.9s; }
+.step:nth-child(6) { transition-delay: 1.1s; }
+
+/* ====== ABOUT SECTION ====== */
+.about {
+  padding: 60px 20px;
+  text-align: center;
+  background: #fff;
+}
+
+.about h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.about p {
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease-in-out;
+}
+
+.about.show p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ====== CTA SECTION ====== */
+.cta {
+  text-align: center;
+  padding: 50px 20px;
+  background: #007bff;
+  color: white;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease-in-out;
+}
+
+.cta.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta h3 {
+  font-size: 1.8rem;
+}
+
+.cta p {
+  margin: 10px 0 20px;
+}
+
+.create-btn {
+  background: white;
+  color: #007bff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.create-btn:hover {
+  background: #f1f1f1;
+}
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.social-links a {
+  font-size: 2.2rem;
+  color: #333;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-links a:hover {
+  transform: scale(1.3);
+}
+
+.social-links .whatsapp:hover { color: #25D366; }   /* WhatsApp green */
+.social-links .linkedin:hover { color: #0077b5; }   /* LinkedIn blue */
+.social-links .instagram:hover { color: #E1306C; }  /* Instagram pink */
+.social-links .mail:hover { color: #EA4335; }       /* Gmail red */
+
+/* ====== FOOTER ====== */
+.footer {
+  background: #f1f1f1;
+  text-align: center;
+  padding: 15px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* ====== ANIMATIONS ====== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
